@@ -186,14 +186,17 @@ void loop()
       // SerialPort.print(report);
       Serial.print("S");
       for (int i = 0; i < 64; i++) {
-        // SerialPort.print(Results.distance_mm[VL53L5CX_NB_TARGET_PER_ZONE * i]);
-        SerialPort.print(i);
+        SerialPort.print(Results.distance_mm[VL53L5CX_NB_TARGET_PER_ZONE * i]);
+        // SerialPort.print(i);
         SerialPort.print(" ");
+
+        
         // SerialPort.print(report);
 
         // if ((i+1) % 8 == 0) SerialPort.println("");
       }
       SerialPort.print("T");
+      
       loop_count++;
     }
 
