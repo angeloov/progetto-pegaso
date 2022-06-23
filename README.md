@@ -1,6 +1,6 @@
 # Distance sensor 8x8
 
-![Screenshot of the GUI][images/gui.png]
+![Screenshot of the GUI](images/gui.png)
 
 ## What you need
 
