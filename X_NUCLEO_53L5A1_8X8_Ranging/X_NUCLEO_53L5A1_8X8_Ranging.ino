@@ -99,7 +99,7 @@ void setup()
 
   // Initialize serial for output.
   SerialPort.begin(115200);
-  SerialPort.println("Initialize... Please wait, it may take few seconds...");
+  // SerialPort.println("Initialize... Please wait, it may take few seconds...");
 
   // Initialize I2C bus.
   DEV_I2C.begin();
@@ -184,19 +184,19 @@ void loop()
 
       // snprintf(report, sizeof(report), "Print data no : %3u\r\n", sensor_vl53l5cx_top.get_stream_count());
       // SerialPort.print(report);
-      Serial.print("S");
+      
+      SerialPort.print("S");
       for (int i = 0; i < 64; i++) {
         SerialPort.print(Results.distance_mm[VL53L5CX_NB_TARGET_PER_ZONE * i]);
-        // SerialPort.print(i);
         SerialPort.print(" ");
-
         
         // SerialPort.print(report);
 
         // if ((i+1) % 8 == 0) SerialPort.println("");
       }
       SerialPort.print("T");
-      
+
+      //Serial.println("");
       loop_count++;
     }
 
@@ -216,4 +216,6 @@ void loop()
   } else {
     delay(1000);
   }
+
+  delay(100);
 }
