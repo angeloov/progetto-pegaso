@@ -6,9 +6,9 @@ Serial myPort;
 
 final int ROWS = 8;
 final int COLS = 8;
+int w, h;
 
 boolean isReceivingData = false;
-boolean sensorIsCalibrated = false;
 int loopCount = 0;
 
 int minDistance = 0;
@@ -19,6 +19,9 @@ int[][] M = new int[ROWS][COLS];
 void setup() {
   size(480, 480);
   colorMode(HSB);
+  
+  w = width / ROWS;
+  h = height / COLS;
   
   String[] serialInterfaces = Serial.list();
   printArray(serialInterfaces);
@@ -45,13 +48,13 @@ void serialEvent(Serial myPort) {
     int i = 0;
     for (String s : splittedRes) {
       M[i / ROWS][i % COLS] = Integer.valueOf(s);
-      print(M[i / ROWS][i % COLS] + " ");
+      // print(M[i / ROWS][i % COLS] + " ");
       
-      if ((i+1) % 8 == 0) println();
+      // if ((i+1) % 8 == 0) println();
       i++;
     }
     
-    println();
+    // println();
     
     // swapMatrixHorizontally();
   } catch(RuntimeException e) {
@@ -61,26 +64,21 @@ void serialEvent(Serial myPort) {
 
 
 void draw() {
-  textSize(12);
-  loopCount++;
- 
-  // Uncomment if you want the camera view
-  if (cam.available()) {
+  if (cam.available())
     cam.read();
-  }
   
   image(cam, -(cam.width - cam.height) / 2, 0);  
-  
-  int w = width / ROWS;
-  int h = height / COLS;
+
+  textSize(12);
+  loopCount++;
   
   strokeWeight(0.2);
   for (int y = 0; y < COLS; y++) {
     for (int x = 0; x < ROWS; x++) {
       int col = M[y][x];
-      // print(col + " ");
 
-      float c = map(col, minDistance, maxDistance, 0, 100); // Maps from 0 to MAX_DISTANCE to draw colors from red to green
+      // Maps from minDistance to maxDistance to draw colors from red to green
+      float c = map(col, minDistance, maxDistance, 0, 100); 
       
       final int ALPHA = 100;
       fill(c, 255, 255, ALPHA);
@@ -88,30 +86,20 @@ void draw() {
       int x0 = x * w;
       int y0 = y * w;
       rect(x0, y0, w, h);
+      
       fill(255);
       text(col, x0 + w/2 - 6, y0+h - h/2 + 6);
     }
-    
-    // println();
   }
-  
-  // println();
-  
+    
   if (loopCount % 120 == 0 && isReceivingData) {    
     updateMaxMinDistances();
-    println(minDistance, maxDistance);
+    // println(minDistance, maxDistance);
   }
-  
-  /*
-  if (checkForGesture() && isReceivingData) {
-   //  println("Hand over sensor");
-  }
-  */
-  
 }
 
 void updateMaxMinDistances() {
-  int min = 5000, max = 0;
+  int min = Integer.MAX_VALUE, max = 0;
   
   for (int i = 0; i < ROWS; i++) {
     for (int j = 0; j < COLS; j++) {
@@ -124,18 +112,6 @@ void updateMaxMinDistances() {
   
   minDistance = min;
   maxDistance = max;
-}
-
-boolean checkForGesture() {
-  int numOfSquares = 0;
-    
-  for (int i = 0; i < ROWS; i++) {
-    for (int j = 0; j < COLS; j++) {
-      if (M[i][j] < 50) numOfSquares++;
-    }
-  }
-  
-  return numOfSquares > 50;
 }
 
 void swapMatrixHorizontally() {
